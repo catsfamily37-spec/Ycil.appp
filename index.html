@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Love CIL</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #f7f9fc;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            padding: 24px 15px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(30, 60, 114, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .subtitle {
+            font-size: 0.95rem;
+            font-weight: normal;
+            opacity: 0.85;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            flex: 1;
+            padding: 24px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* 2열 메뉴 격자 레이아웃 */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 12px;
+            text-align: center;
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: bold;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #edf2f7;
+            cursor: pointer;
+        }
+
+        .menu-item:active {
+            transform: scale(0.96);
+            background-color: #f8fafc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .menu-item .icon {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: #f1f5f9;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* 유튜브 및 가득 찬 버튼 커스텀 스타일 */
+        .full-width-btn {
+            grid-column: span 2;
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+        
+        .full-width-btn .icon {
+            background: #fef3c7;
+        }
+
+        .full-width-btn:active {
+            background: #fef3c7;
+        }
+
+        .youtube-btn {
+            grid-column: span 2;
+        }
+
+        .admin-section {
+            margin-top: 10px;
+            margin-bottom: 24px;
+        }
+
+        .admin-toggle-btn {
+            width: 100%;
+            background: #718096;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: background 0.2s;
+        }
+
+        .admin-toggle-btn:active {
+            background: #4a5568;
+        }
+
+        /* 팝업 모달창 럭셔리 스타일 업데이트 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 460px;
+            padding: 28px;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: modalFade 0.25s ease-out;
+        }
+
+        @keyframes modalFade {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #1e3c72;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 22px; right: 22px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: #a0aec0;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #4a5568;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(42, 82, 152, 0.2);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .application-item {
+            background: #f8fafc;
+            border-left: 4px solid #2a5298;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* 하단 고정 푸터 UI 정돈 */
+        footer {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            border-top: 4px solid #2a5298;
+        }
+
+        footer .company-name {
+            color: white;
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+        }
+        
+        footer p {
+            margin: 2px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        YCIL
+        <div class="subtitle">사람사랑양천장애인자립생활센터</div>
+    </header>
+
+    <div class="container">
+        <div class="menu-grid">
+            <!-- 1. 홈페이지 바로가기 -->
+            <a href="http://www.ycil.co.kr/" class="menu-item" target="_blank">
+                <span class="icon">🌐</span>
+                <span>홈페이지</span>
+            </a>
+
+            <!-- 2. 사진 게시판 -->
+            <a href="http://www.ycil.co.kr/bbs/board.php?bo_table=gallery" class="menu-item" target="_blank">
+                <span class="icon">📸</span>
+                <span>사진 게시판</span>
+            </a>
+
+            <!-- 3. 일정 게시판 -->
+            <div class="menu-item" onclick="openScheduleModal()">
+                <span class="icon">📅</span>
+                <span>일정 게시판</span>
+            </div>
+
+            <!-- 5. 자유 게시판 -->
+            <a href="http://www.ycil.co.kr/bbs/board.php?bo_table=center" class="menu-item" target="_blank">
+                <span class="icon">💬</span>
+                <span>자유 게시판</span>
+            </a>
+
+            <!-- 6. 유튜브 바로가기 -->
+            <a href="https://youtube.com/channel/UCqWoV_tEfTBJ7vnEX90brdQ?si=p3mYEe1uXd_1Vaef" class="menu-item youtube-btn" target="_blank">
+                <span class="icon" style="color: #ff0000; background: #fff1f2;">▶️</span>
+                <span>유튜브 채널 바로가기</span>
+            </a>
+
+            <!-- 4. 동료상담 신청 게시판 -->
+            <div class="menu-item full-width-btn" onclick="openCounselingModal()">
+                <span class="icon">🤝</span>
+                <span>동료상담 신청하기 (일반 사용자)</span>
+            </div>
+        </div>
+
+        <!-- 관리자 메뉴 접근 구역 -->
+        <div class="admin-section">
+            <button class="admin-toggle-btn" onclick="accessAdminMode()">🔑 관리자 전용 메뉴 (신청내역 확인)</button>
+        </div>
+    </div>
+
+    <!-- [모달 1] 동료상담 신청서 -->
+    <div id="counselingModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('counselingModal')">&times;</span>
+            <div class="modal-header">🤝 동료상담 신청서</div>
+            <form id="counselingForm" onsubmit="submitCounseling(event)">
+                <div class="form-group">
+                    <label>신청자 성함</label>
+                    <input type="text" id="applicantName" required placeholder="이름을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label>연락처</label>
+                    <input type="tel" id="applicantPhone" required placeholder="예: 010-1234-5678">
+                </div>
+                <div class="form-group">
+                    <label>상담 내용</label>
+                    <textarea id="applicantContent" required placeholder="희망 상담 내용을 간단히 적어주세요."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">신청서 완료하기</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- [모달 2] 관리자 조회 창 -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content" style="max-width:500px;">
+            <span class="modal-close" onclick="closeModal('adminModal')">&times;</span>
+            <div class="modal-header">🔒 동료상담 데이터 (제작자/관리자 전용)</div>
+            <div style="max-height: 380px; overflow-y: auto; padding-right: 4px;" id="adminDataList"></div>
+        </div>
+    </div>
+
+    <!-- [모달 3] 일정 게시판 -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('scheduleModal')">&times;</span>
+            <div class="modal-header">📅 주요 센터 일정</div>
+            <p style="padding:10px 0; line-height:1.8; color: #4a5568;">
+                • <strong>평일 동료상담:</strong> 상시 운영 (09:00 ~ 18:00)<br>
+                • <strong>자립생활(IL) 기술 훈련:</strong> 매월 정기 진행<br>
+                <span style="display:block; margin-top:12px; color:#2a5298; font-size:0.9rem; font-weight:bold;">※ 세부 월간 스케줄은 홈페이지 공지사항을 참고해 주세요!</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- 푸터 정보 영역 -->
+    <footer>
+        <div class="company-name">사람사랑양천장애인자립생활센터 (YCIL)</div>
+        <p>주소 : 서울시 양천구 신정로 267 양천벤처타운 603호</p>
+        <p>전화 : 02-2608-2979 &nbsp;|&nbsp; FAX : 02-2698-7120</p>
+        <p>E-mail : ycil@ycil.org &nbsp;|&nbsp; 대표 : 천유정</p>
+    </footer>
+
+    <script>
+        // 초기 로컬 데이터 더미 세팅
+        if(!localStorage.getItem('counselingData')) {
+            localStorage.setItem('counselingData', JSON.stringify([
+                {name: "김철수", phone: "010-1234-5678", content: "동료 자립 상담을 정기적으로 받고 싶습니다.", date: "2026-06-15"}
+            ]));
+        }
+
+        function openCounselingModal() { document.getElementById('counselingModal').style.display = 'flex'; }
+        function openScheduleModal() { document.getElementById('scheduleModal').style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // 상담 신청 폼 등록 로직
+        function submitCounseling(event) {
+            event.preventDefault();
+            const name = document.getElementById('applicantName').value;
+            const phone = document.getElementById('applicantPhone').value;
+            const content = document.getElementById('applicantContent').value;
+            const date = new Date().toISOString().split('T')[0];
+
+            let currentData = JSON.parse(localStorage.getItem('counselingData')) || [];
+            currentData.unshift({ name, phone, content, date });
+            localStorage.setItem('counselingData', JSON.stringify(currentData));
+
+            alert("동료상담 신청이 안전하게 등록되었습니다.");
+            document.getElementById('counselingForm').reset();
+            closeModal('counselingModal');
+        }
+
+        // 비밀번호 가림 처리 검증 (1230 제한)
+        function accessAdminMode() {
+            const secureCode = "12" + "3" + "0"; 
+            const userInput = prompt("관리자 비밀번호를 입력해 주세요:");
+
+            if (userInput === secureCode) {
+                renderAdminList();
+                document.getElementById('adminModal').style.display = 'flex';
+            } else if (userInput !== null) {
+                alert("경고: 비밀번호가 올바르지 않습니다.");
+            }
+        }
+
+        // 관리자용 신청 리스트 생성
+        function renderAdminList() {
+            const container = document.getElementById('adminDataList');
+            const data = JSON.parse(localStorage.getItem('counselingData')) || [];
+            
+            if(data.length === 0) {
+                container.innerHTML = "<p style='padding:20px; color:#a0aec0; text-align:center;'>등록된 신청서가 없습니다.</p>";
+                return;
+            }
+
+            let html = "";
+            data.forEach(item => {
+                html += `
+                    <div class="application-item">
+                        <div style="font-weight:bold; color:#1e3c72; margin-bottom:6px; font-size:1.05rem;">${item.name} <span style="font-size:0.8rem; color:#718096; font-weight:normal;">(${item.date})</span></div>
+                        <div style="font-size:0.9rem; color:#4a5568; margin-bottom:6px;">연락처: <a href="tel:${item.phone}" style="color:#2a5298; text-decoration:none; font-weight:bold;">${item.phone}</a></div>
+                        <div style="background:#fff; padding:10px; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem; color:#2d3748; white-space:pre-wrap; line-height:1.4;">${item.content}</div>
+                    </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // 배경 레이어 클릭 시 팝업 닫기
+        window.onclick = function(e) {
+            ['counselingModal', 'adminModal', 'scheduleModal'].forEach(id => {
+                let modal = document.getElementById(id);
+                if (e.target == modal) modal.style.display = "none";
+            });
+        }
+    </script>
+</body>
+</html>
